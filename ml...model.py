@@ -141,8 +141,9 @@ with tab4:
                    title="Portfolio Backtest Performance",
                    labels={"Date": "Time (Days/Months)", "Cumulative Return": "Growth of $1 Invested"})
     st.plotly_chart(fig3, use_container_width=True)
-
+    st.subheader("🔑 Portfolio Performance Summary")
     st.metric("Expected Portfolio Return (%)", round(max_sharpe_return * 100, 2))
     st.metric("Portfolio Volatility (%)", round(max_sharpe_vol * 100, 2))
     st.metric("Portfolio Sharpe Ratio", round(results[2, max_sharpe_idx], 2))
+
 
