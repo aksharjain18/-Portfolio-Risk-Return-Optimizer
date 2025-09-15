@@ -126,12 +126,23 @@ if len(Tickers) > 0:
         })
         st.dataframe(prob_df)
 
-    with tab4:
-        st.subheader("📊 Historical Backtest")
-        port_rets = adj_close.pct_change().dropna() @ max_sharpe_weights
-        cumulative_returns = (1 + port_rets).cumprod()
+with tab4:
+    st.subheader("📊 Historical Backtest")
+    port_rets = adj_close.pct_change().dropna() @ max_sharpe_weights
+    cumulative_returns = (1 + port_rets).cumprod()
 
-        st.line_chart(cumulative_returns, use_container_width=True)
-        st.metric("Expected Portfolio Return (%)", round(max_sharpe_return * 100, 2))
-        st.metric("Portfolio Volatility (%)", round(max_sharpe_vol * 100, 2))
-        st.metric("Portfolio Sharpe Ratio", round(results[2, max_sharpe_idx], 2))
+    # Use Plotly instead of st.line_chart
+    backtest_df = pd.DataFrame({
+        "Date": cumulative_returns.index,
+        "Cumulative Return": cumulative_returns.values
+    })
+
+    fig3 = px.line(backtest_df, x="Date", y="Cumulative Return",
+                   title="Portfolio Backtest Performance",
+                   labels={"Date": "Time (Days/Months)", "Cumulative Return": "Growth of $1 Invested"})
+    st.plotly_chart(fig3, use_container_width=True)
+
+    st.metric("Expected Portfolio Return (%)", round(max_sharpe_return * 100, 2))
+    st.metric("Portfolio Volatility (%)", round(max_sharpe_vol * 100, 2))
+    st.metric("Portfolio Sharpe Ratio", round(results[2, max_sharpe_idx], 2))
+
